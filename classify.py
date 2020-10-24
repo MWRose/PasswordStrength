@@ -1,6 +1,3 @@
-import json
-
-
 # blacklistHard:
 # Same as the blacklistEasy condition, except
 # we used a five-billion-word dictionary created using the
@@ -35,7 +32,6 @@ def in_dict(word, word_dict):
         for j in range(0, len(word) - size + 1):
             sliced = word[j:j + size]
             if sliced in word_dict:
-                print(sliced)
                 return True
     return False
     
@@ -67,6 +63,15 @@ def create_name_set(filename):
     return names
 
 
+def create_common_set(filename):
+    names = set()
+    with open(filename, "r") as f:
+        lines = f.readlines()
+        for line in lines:     
+            names.add(line.split()[0])
+    return names
+
+
 def main():
 
     english_dict = create_eng_dict()
@@ -78,8 +83,8 @@ def main():
     names = names.union(create_name_set("dist.female.first"))
     names = names.union(create_name_set("dist.male.first"))
 
-    common_passwords = create_name_set("10-million-password-list-top-1000000.txt")
-    
+    common_passwords = create_common_set("10-million-password-list-top-1000000.txt")
+
     # Check if there is an english word or name
     not_eng_word = not in_dict(password, english_dict)
     not_name = not in_dict(password, names)
@@ -99,7 +104,7 @@ def main():
 
     over16 = is_valid_length(password, 16)
     
-    print(not_eng_word, not_name, special_characters, valid_length, has_diff_case, not_common_pass, over16)
+    # print(not_eng_word, not_name, special_characters, valid_length, has_diff_case, not_common_pass, over16)
 
     if (not_eng_word and not_name and special_characters and valid_length and has_diff_case and not_common_pass and has_number) or over16:
         print("strong")
